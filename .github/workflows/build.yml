@@ -21,7 +21,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-
+    
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -36,24 +36,17 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y openjdk-11-jdk wget unzip
-        # Create directories for Android SDK
-        mkdir -p $HOME/Android/Sdk/cmdline-tools
         wget "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O cmdline-tools.zip
-        unzip cmdline-tools.zip -d $HOME/Android/Sdk/cmdline-tools
-        mkdir -p $HOME/Android/Sdk/cmdline-tools/latest
-        mv $HOME/Android/Sdk/cmdline-tools/cmdline-tools/* $HOME/Android/Sdk/cmdline-tools/latest
+        unzip cmdline-tools.zip
+        mkdir -p $HOME/Android/Sdk/cmdline-tools
+        mv cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
         export ANDROID_HOME=$HOME/Android/Sdk
-        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH
-        # Re-source the PATH to ensure sdkmanager is found
-        source $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --version
+        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
         yes | sdkmanager --licenses
-        sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "cmdline-tools;latest" "extras;android;m2repository" "system-images;android-30;default;x86_64"
-
-    - name: List installed SDK packages
-      run: sdkmanager --list
+        sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "build-tools;30.0.3" "system-images;android-30;default;x86_64"
 
     - name: Run Buildozer
       run: |
         export ANDROID_HOME=$HOME/Android/Sdk
-        export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$PATH
+        export PATH=$ANDROID_HOME/platform-tools:$PATH
         buildozer android debug
