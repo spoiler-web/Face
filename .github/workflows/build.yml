@@ -36,14 +36,18 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y openjdk-11-jdk wget unzip
-        wget "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O cmdline-tools.zip
-        unzip cmdline-tools.zip
         mkdir -p $HOME/Android/Sdk/cmdline-tools
-        mv cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
+        wget "https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip" -O cmdline-tools.zip
+        unzip cmdline-tools.zip -d $HOME/Android/Sdk/cmdline-tools
+        rm cmdline-tools.zip
+
         export ANDROID_HOME=$HOME/Android/Sdk
         export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+
+        sdkmanager --list
+
+        sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
         yes | sdkmanager --licenses
-        sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "build-tools;30.0.3" "system-images;android-30;default;x86_64"
 
     - name: Run Buildozer
       run: |
