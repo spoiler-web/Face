@@ -26,7 +26,6 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.8'
-        cache: 'pip'
 
     - name: Install Buildozer and dependencies
       run: |
@@ -36,24 +35,19 @@ jobs:
     - name: Install Android SDK and tools
       run: |
         sudo apt-get update
-        sudo apt-get install -y openjdk-11-jdk wget unzip
+        sudo apt-get install -y openjdk-11-jdk wget unzip libstdc++6
         wget "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O cmdline-tools.zip
         unzip cmdline-tools.zip
-        mkdir -p $HOME/Android/Sdk/cmdline-tools/latest
+        mkdir -p $HOME/Android/Sdk/cmdline-tools
         mv cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
-        echo "ANDROID_HOME=$HOME/Android/Sdk" >> $GITHUB_ENV
-        echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
+        export ANDROID_HOME=$HOME/Android/Sdk
+        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
         yes | sdkmanager --licenses
         sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "system-images;android-30;default;x86_64"
 
     - name: Run Buildozer
       run: |
+        export ANDROID_HOME=$HOME/Android/Sdk
+        export PATH=$ANDROID_HOME/platform-tools:$PATH
         buildozer android debug
-
-    - name: Upload APK
-      uses: actions/upload-artifact@v3
-      with:
-        name: APK
-        path: bin/*.apk
-
         
