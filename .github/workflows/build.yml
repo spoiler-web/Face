@@ -35,7 +35,7 @@ jobs:
     - name: Install Android SDK and tools
       run: |
         sudo apt-get update
-        sudo apt-get install -y openjdk-11-jdk wget unzip libstdc++6
+        sudo apt-get install -y openjdk-11-jdk wget unzip libstdc++-6
         wget "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O cmdline-tools.zip
         unzip cmdline-tools.zip
         mkdir -p $HOME/Android/Sdk/cmdline-tools
