@@ -1,0 +1,11 @@
+buildozer
+cython
+kivy           # If you are building a Kivy-based app
+pillow         # For image processing, often needed in GUI applications
+numpy          # For numerical calculations
+requests       # If your app makes HTTP requests
+sqlite3        # For database operations
+plyer          # For accessing native mobile features like notifications, GPS, etc.
+jinja2         # For templating if your app uses it
+pygments       # For syntax highlighting if needed
+certifi        # For SSL certificate handling
