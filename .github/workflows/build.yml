@@ -32,10 +32,19 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython
 
-    - name: Install Android SDK and tools
+    - name: Install libstdc++6
       run: |
         sudo apt-get update
-        sudo apt-get install -y openjdk-11-jdk wget unzip libstdc++-6
+        sudo apt-get install -y libstdc++6
+
+    - name: Install aidl
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y aidl
+
+    - name: Install Android SDK and tools
+      run: |
+        sudo apt-get install -y openjdk-11-jdk wget unzip
         wget "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O cmdline-tools.zip
         unzip cmdline-tools.zip
         mkdir -p $HOME/Android/Sdk/cmdline-tools
@@ -50,4 +59,3 @@ jobs:
         export ANDROID_HOME=$HOME/Android/Sdk
         export PATH=$ANDROID_HOME/platform-tools:$PATH
         buildozer android debug
-        
