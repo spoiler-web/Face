@@ -46,16 +46,30 @@ jobs:
       run: |
         sudo apt-get install -y openjdk-11-jdk wget unzip
         wget "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O cmdline-tools.zip
-        unzip cmdline-tools.zip
-        mkdir -p $HOME/Android/Sdk/cmdline-tools
-        mv cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
-        export ANDROID_HOME=$HOME/Android/Sdk
-        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
-        yes | sdkmanager --licenses
-        sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "system-images;android-30;default;x86_64"
+        unzip cmdline-tools.zip -d cmdline-tools
+        mkdir -p $HOME/Android/Sdk/cmdline-tools/latest
+        mv cmdline-tools/cmdline-tools $HOME/Android/Sdk/cmdline-tools/latest
+        echo "ANDROID_HOME=$HOME/Android/Sdk" >> $GITHUB_ENV
+        echo "$HOME/Android/Sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+        echo "$HOME/Android/Sdk/platform-tools" >> $GITHUB_PATH
+        echo "$HOME/Android/Sdk/emulator" >> $GITHUB_PATH
+        yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+        yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;35.0.0" "system-images;android-30;default;x86_64"
+
+    - name: Verify Aidl Installation
+      run: |
+        if ! command -v aidl &> /dev/null; then
+          echo "Error: aidl is not installed. Please check the Build-Tools installation.";
+          exit 1;
+        fi
 
     - name: Run Buildozer
       run: |
         export ANDROID_HOME=$HOME/Android/Sdk
         export PATH=$ANDROID_HOME/platform-tools:$PATH
         buildozer android debug
+
+    - name: Accept Android SDK Licenses
+      run: |
+        yes | $HOME/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+        
