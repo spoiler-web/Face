@@ -36,6 +36,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y openjdk-11-jdk wget unzip
+        # Create necessary directories for Android SDK
+        mkdir -p $HOME/Android/Sdk/cmdline-tools
         wget "https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip" -O cmdline-tools.zip
         unzip cmdline-tools.zip -d $HOME/Android/Sdk/cmdline-tools
         mkdir -p $HOME/Android/Sdk/cmdline-tools/latest
@@ -53,3 +55,4 @@ jobs:
         export ANDROID_HOME=$HOME/Android/Sdk
         export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$PATH
         buildozer android debug
+        
